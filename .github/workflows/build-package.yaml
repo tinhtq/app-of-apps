@@ -18,6 +18,7 @@ jobs:
       id: install
     - name: Pull Dependencies
       run: |
+        cd charts
         folders=$(find . -type d -maxdepth 1 -mindepth 1 | grep -v './apps')
         # Iterate through each folder
         for folder in $folders; do
