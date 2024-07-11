@@ -1,0 +1,33 @@
+name: Deploy to EC2
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - uses: azure/setup-helm@v4.2.0
+      with:
+          version: 'default' 
+      id: install
+    - name: Pull Dependencies
+      run: |
+        folders=$(find . -type d -maxdepth 1 -mindepth 1 | grep -v './apps')
+        # Iterate through each folder
+        for folder in $folders; do
+            echo "Updating dependencies in $folder"
+            cd "$folder" || { echo "Failed to enter $folder"; exit 1; }
+            helm dependency update
+            cd ..
+        done
+        echo "All dependencies updated."
+    - name: Auto-Commit
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: "Push to Repository [skip ci]"
