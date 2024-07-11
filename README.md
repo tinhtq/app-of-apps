@@ -4,4 +4,4 @@ The repository uses the app of apps pattern of Argocd. In this section, I use th
 
 ## Timeline
 
-**11-07-2024:** Update Kube-Prometheus-Stack
+**Jun 11, 2024:** Update Kube-Prometheus-Stack
