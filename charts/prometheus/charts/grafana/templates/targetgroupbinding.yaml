@@ -1,0 +1,22 @@
+{{- if .Values.tgb.enabled }}
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  annotations:
+  finalizers:
+  - elbv2.k8s.aws/resources
+  name: grafana-tgb
+spec:
+  networking:
+    ingress:
+    - from:
+      - securityGroup:
+          groupID: {{ .Values.tgb.sgId }}
+      ports:
+      - port: {{ .Values.service.port }}
+        protocol: TCP
+  serviceRef:
+    name: {{ include "grafana.fullname" . }}
+    port: {{ .Values.service.targetPort }}
+  targetGroupARN: {{ .Values.tgb.tgArn }}
+{{- end }}

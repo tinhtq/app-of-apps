@@ -1,0 +1,22 @@
+{{- if .Values.prometheus.tgb.enabled }}
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  annotations:
+  finalizers:
+  - elbv2.k8s.aws/resources
+  name: grafana-tgb
+spec:
+  networking:
+    ingress:
+    - from:
+      - securityGroup:
+          groupID: {{ .Values.prometheus.tgb.sgId }}
+      ports:
+      - port: {{ .Values.prometheus.service.port }}
+        protocol: TCP
+  serviceRef:
+    name: {{ template "kube-prometheus-stack.fullname" . }}-prometheus
+    port: {{ .Values.prometheus.service.targetPort }}
+  targetGroupARN: {{ .Values.prometheus.tgb.tgArn }}
+{{- end }}
